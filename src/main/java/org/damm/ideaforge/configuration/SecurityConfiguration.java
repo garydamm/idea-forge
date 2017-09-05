@@ -32,25 +32,48 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		return bCryptPasswordEncoder;
+		return new BCryptPasswordEncoder();
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(rolesQuery)
-				.dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
+		// @formatter:off
+		auth.jdbcAuthentication()
+			.usersByUsernameQuery(usersQuery)
+			.authoritiesByUsernameQuery(rolesQuery)
+			.dataSource(dataSource)
+			.passwordEncoder(bCryptPasswordEncoder);
+		// @formatter:on
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
-		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/login").permitAll()
-				.antMatchers("/registration").permitAll().antMatchers("/admin/**").hasAuthority("ADMIN").anyRequest()
-				.authenticated().and().csrf().disable().formLogin().loginPage("/login").failureUrl("/login?error=true")
-				.defaultSuccessUrl("/admin/home").usernameParameter("email").passwordParameter("password").and()
-				.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/").and()
-				.exceptionHandling().accessDeniedPage("/access-denied");
+		// @formatter:off
+		http.authorizeRequests()
+			.antMatchers("/").permitAll()
+			.antMatchers("/login").permitAll()
+			.antMatchers("/registration").permitAll()
+			.antMatchers("/admin/**")
+				.hasAuthority("ADMIN")
+				.anyRequest()
+				.authenticated()
+				.and()
+				.csrf()
+				.disable()
+				.formLogin()
+				.loginPage("/login")
+				.failureUrl("/login?error=true")
+				.defaultSuccessUrl("/admin/home")
+				.usernameParameter("email")
+				.passwordParameter("password")
+				.and()
+				.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/")
+				.and()
+				.exceptionHandling()
+				.accessDeniedPage("/access-denied");
+		// @formatter:on
 	}
 
 	@Override

@@ -6,5 +6,10 @@
 </head>
 <body>
 	<h1>Idea Forge</h1>
+	Welcome
+	<span th:utext="${user.name}"></span>
+	<form th:action="@{/logout}" method="get">
+		<button class="btn btn-md btn-danger btn-block" name="registration" type="Submit">Logout</button>
+	</form>
 </body>
 </html>

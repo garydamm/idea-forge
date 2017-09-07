@@ -5,8 +5,6 @@ import javax.validation.Valid;
 import org.damm.ideaforge.pojo.User;
 import org.damm.ideaforge.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +18,8 @@ public class LoginController {
 	private UserService userService;
 
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-	public ModelAndView login() {
-		return new ModelAndView("login");
+	public String login() {
+		return "login";
 	}
 
 	@RequestMapping(value = "/registration", method = RequestMethod.GET)
@@ -50,23 +48,6 @@ public class LoginController {
 
 		}
 		return modelAndView;
-	}
-
-	@RequestMapping(value = "/admin/home", method = RequestMethod.GET)
-	public ModelAndView home() {
-		ModelAndView modelAndView = new ModelAndView();
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject("userName",
-				"Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
-		modelAndView.setViewName("admin/home");
-		return modelAndView;
-	}
-
-	@RequestMapping("/admin/home")
-	public String index() {
-		return "index";
 	}
 
 }

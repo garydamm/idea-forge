@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+<meta charset="UTF-8"></meta>
+<title>Idea Forge</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"></link>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4" th:fragment="top-nav">
+	<a class="navbar-brand" href="#">Idea Forge</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse"
+		data-target="#navbarCollapse" aria-controls="navbarCollapse"
+		aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active"><a class="nav-link" href="#">Ideas</a></li>
+			<li class="nav-item"><a class="nav-link" href="#">Teams</a>
+			</li>
+		</ul>
+		<form th:action="@{/logout}" method="get" class="form-inline mt-2 mt-md-0">
+			<button class="btn btn-outline-success my-2 my-sm-0" name="logout" type="Submit">Logout</button>
+		</form>
+	</div>
+</nav>
+
+<div th:fragment="footer">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+</div>
+
+</body>
+</html>

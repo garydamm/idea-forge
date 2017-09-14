@@ -2,12 +2,15 @@ package org.damm.ideaforge.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.damm.ideaforge.pojo.Idea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,6 +20,21 @@ public class IdeaRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	public List<Idea> findAll() {
+		String sql = "select id, title, description from idea";
+		RowMapper<Idea> rowMapper = new RowMapper<Idea>() {
+			@Override
+			public Idea mapRow(ResultSet rs, int row) throws SQLException {
+				Idea idea = new Idea();
+				idea.setId(rs.getLong("id"));
+				idea.setDescription(rs.getString("description"));
+				idea.setTitle(rs.getString("title"));
+				return idea;
+			}
+		};
+		return jdbcTemplate.query(sql, rowMapper);
+	}
 
 	public Idea insert(Idea idea) {
 		String sql = "insert into idea (title, description) values (?,?)";

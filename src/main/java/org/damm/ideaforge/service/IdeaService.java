@@ -1,5 +1,7 @@
 package org.damm.ideaforge.service;
 
+import java.util.List;
+
 import org.damm.ideaforge.pojo.Idea;
 import org.damm.ideaforge.repository.IdeaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +19,9 @@ public class IdeaService {
 
 	public void updateIdea(Idea idea) {
 		ideaRepository.update(idea);
+	}
+
+	public List<Idea> findAll() {
+		return ideaRepository.findAll();
 	}
 }

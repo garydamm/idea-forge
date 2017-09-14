@@ -1,5 +1,7 @@
 package org.damm.ideaforge.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.damm.ideaforge.pojo.Idea;
@@ -17,6 +19,15 @@ public class IdeaController {
 
 	@Autowired
 	private IdeaService ideaService;
+
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView list() {
+		List<Idea> ideas = ideaService.findAll();
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("ideas", ideas);
+		modelAndView.setViewName("idea/list");
+		return modelAndView;
+	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public ModelAndView newIdea() {

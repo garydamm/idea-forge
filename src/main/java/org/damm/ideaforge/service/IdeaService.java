@@ -24,4 +24,8 @@ public class IdeaService {
 	public List<Idea> findAll() {
 		return ideaRepository.findAll();
 	}
+
+	public Idea find(Long id) {
+		return ideaRepository.find(id);
+	}
 }

@@ -10,7 +10,7 @@
 	<div class="container">
 		<h3>Ideas</h3>
 		<div class="list-group">
-		  <a th:each="idea : ${ideas}" th:text="${idea.title}" href="#" class="list-group-item list-group-item-action">Cras justo odio</a>
+		  <a th:each="idea : ${ideas}" th:text="${idea.title}" th:href="@{/idea/edit/{id}(id=${idea.id})}" class="list-group-item list-group-item-action">Cras justo odio</a>
 		</div>
 	</div>
 

@@ -23,17 +23,7 @@ public class IdeaRepository {
 
 	public List<Idea> findAll() {
 		String sql = "select id, title, description from idea";
-		RowMapper<Idea> rowMapper = new RowMapper<Idea>() {
-			@Override
-			public Idea mapRow(ResultSet rs, int row) throws SQLException {
-				Idea idea = new Idea();
-				idea.setId(rs.getLong("id"));
-				idea.setDescription(rs.getString("description"));
-				idea.setTitle(rs.getString("title"));
-				return idea;
-			}
-		};
-		return jdbcTemplate.query(sql, rowMapper);
+		return jdbcTemplate.query(sql, new IdeaRowMapper());
 	}
 
 	public Idea insert(Idea idea) {
@@ -55,6 +45,22 @@ public class IdeaRepository {
 	public int update(Idea idea) {
 		String sql = "update idea set title = ?, description = ? where id = ?";
 		return jdbcTemplate.update(sql, idea.getTitle(), idea.getDescription(), idea.getId());
+	}
+
+	public Idea find(Long id) {
+		String sql = "select id, title, description from idea where id = ?";
+		return jdbcTemplate.queryForObject(sql, new IdeaRowMapper(), id);
+	}
+
+	private class IdeaRowMapper implements RowMapper<Idea> {
+		@Override
+		public Idea mapRow(ResultSet rs, int row) throws SQLException {
+			Idea idea = new Idea();
+			idea.setId(rs.getLong("id"));
+			idea.setDescription(rs.getString("description"));
+			idea.setTitle(rs.getString("title"));
+			return idea;
+		}
 	}
 
 }

@@ -46,12 +46,12 @@ public class IdeaController {
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ModelAndView edit(@Valid Idea idea, BindingResult bindingResult) {
-		ideaService.updateIdea(idea);
-		return editResponse(idea);
+		Idea updatedIdea = ideaService.updateIdea(idea);
+		return editResponse(updatedIdea);
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editFromID(@PathVariable("id") Long id) {
+	public ModelAndView loadForEdit(@PathVariable("id") Long id) {
 		Idea idea = ideaService.find(id);
 		return editResponse(idea);
 	}

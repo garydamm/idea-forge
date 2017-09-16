@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.damm.ideaforge.pojo.Idea;
+import org.damm.ideaforge.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -18,16 +19,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class IdeaRepository {
 
+	private final static String SELECT_IDEA = "select id, title, description, user_id from idea";
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	public List<Idea> findAll() {
-		String sql = "select id, title, description from idea";
-		return jdbcTemplate.query(sql, new IdeaRowMapper());
+		return jdbcTemplate.query(SELECT_IDEA, new IdeaRowMapper());
 	}
 
-	public Idea insert(Idea idea) {
-		String sql = "insert into idea (title, description) values (?,?)";
+	public Idea insert(Idea idea, User currentUser) {
+		String sql = "insert into idea (title, description, user_id) values (?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
@@ -35,6 +37,7 @@ public class IdeaRepository {
 				PreparedStatement ps = connection.prepareStatement(sql, new String[] { "id" });
 				ps.setString(1, idea.getTitle());
 				ps.setString(2, idea.getDescription());
+				ps.setLong(3, currentUser.getId());
 				return ps;
 			}
 		}, keyHolder);
@@ -48,7 +51,7 @@ public class IdeaRepository {
 	}
 
 	public Idea find(Long id) {
-		String sql = "select id, title, description from idea where id = ?";
+		String sql = String.format("%s %s", SELECT_IDEA, "where id = ?");
 		return jdbcTemplate.queryForObject(sql, new IdeaRowMapper(), id);
 	}
 
@@ -59,6 +62,7 @@ public class IdeaRepository {
 			idea.setId(rs.getLong("id"));
 			idea.setDescription(rs.getString("description"));
 			idea.setTitle(rs.getString("title"));
+			idea.setUserId(rs.getLong("user_id"));
 			return idea;
 		}
 	}

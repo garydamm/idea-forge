@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/layout :: head"></head>
 
 <body>
 
 	<nav th:replace="fragments/layout :: top-nav"></nav>
-	
+
 	<div class="container">
-		<h3>Ideas</h3>
-		<div class="list-group">
-		  <a th:each="idea : ${ideas}" th:text="${idea.title}" th:href="@{/idea/edit/{id}(id=${idea.id})}" class="list-group-item list-group-item-action">Cras justo odio</a>
+
+		<div class="row">
+			<div class="col">
+				<h3>Ideas</h3>
+			</div>
+			<div class="col">
+				<a class="btn btn-primary btn-sm float-right" th:href="@{/idea/new}"
+					role="button">New <i class="fa fa-plus"></i></a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<div class="list-group">
+					<a th:each="idea : ${ideas}" th:text="${idea.title}"
+						th:href="@{/idea/edit/{id}(id=${idea.id})}"
+						class="list-group-item list-group-item-action"></a>
+				</div>
+			</div>
 		</div>
 	</div>
 
 	<div th:replace="fragments/layout :: footer"></div>
-	
+
 </body>
 </html>

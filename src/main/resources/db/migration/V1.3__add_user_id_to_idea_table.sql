@@ -1,0 +1,1 @@
+alter table idea add user_id INT;

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepository {
 
+	private final static String SELECT_USER = "select id, email, active, name, last_name from user";
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -22,22 +24,18 @@ public class UserRepository {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public User findUserByEmail(String email) {
-		String sql = "select id, email, active, name, last_name from user where email = ?";
-		RowMapper<User> userRowMapper = new RowMapper<User>() {
-
-			@Override
-			public User mapRow(ResultSet resultSet, int row) throws SQLException {
-				User user = new User();
-				user.setEmail(resultSet.getString("email"));
-				user.setId(resultSet.getInt("id"));
-				user.setActive(resultSet.getInt("active"));
-				user.setLastName(resultSet.getString("last_name"));
-				user.setName(resultSet.getString("name"));
-				return user;
-			}
-		};
+		String sql = String.format("%s %s", SELECT_USER, "where email = ?");
 		try {
-			return jdbcTemplate.queryForObject(sql, userRowMapper, email);
+			return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
+	public User find(long id) {
+		String sql = String.format("%s %s", SELECT_USER, "where id = ?");
+		try {
+			return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -71,6 +69,20 @@ public class UserRepository {
 	private void insertUserRoles(User user, Role role) {
 		String sql = "insert into user_role (user_id, role_id) values (?,?)";
 		jdbcTemplate.update(sql, user.getId(), role.getId());
+	}
+
+	private class UserRowMapper implements RowMapper<User> {
+
+		@Override
+		public User mapRow(ResultSet resultSet, int row) throws SQLException {
+			User user = new User();
+			user.setEmail(resultSet.getString("email"));
+			user.setId(resultSet.getInt("id"));
+			user.setActive(resultSet.getInt("active"));
+			user.setLastName(resultSet.getString("last_name"));
+			user.setName(resultSet.getString("name"));
+			return user;
+		}
 	}
 
 }

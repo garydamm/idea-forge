@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/layout :: head"></head>
+
+<body>
+
+	<nav th:replace="fragments/layout :: top-nav"></nav>
+
+	<div class="container">
+
+		<div class="row">
+			<div class="col">
+				<h3>Events</h3>
+			</div>
+			<div class="col">
+				<a class="btn btn-primary btn-sm float-right" th:href="@{/event/new}"
+					role="button">New <i class="fa fa-plus"></i></a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<div class="list-group">
+					<a th:each="event : ${events}" th:text="${event.name}"
+						th:href="@{/event/edit/{id}(id=${event.id})}"
+						class="list-group-item list-group-item-action"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragments/layout :: footer"></div>
+
+</body>
+</html>

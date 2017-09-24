@@ -35,10 +35,17 @@ public class TeamService {
 		return teamRepository.findAll();
 	}
 
+	public void addMember(long teamId, String email) {
+		User user = userRepository.findUserByEmail(email);
+		teamRepository.addMember(teamId, user.getId());
+	}
+
 	public Team find(Long id) {
 		Team team = teamRepository.find(id);
 		User user = userRepository.find(team.getUserId());
+		List<User> members = teamRepository.members(id);
 		team.setCreatedBy(user);
+		team.setMembers(members);
 		return team;
 	}
 

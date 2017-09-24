@@ -1,11 +1,14 @@
 package org.damm.ideaforge.pojo;
 
+import java.util.List;
+
 public class Team {
 
 	private long id;
 	private String name;
 	private long userId;
 	private User createdBy;
+	private List<User> members;
 
 	public String getName() {
 		return name;
@@ -37,6 +40,14 @@ public class Team {
 
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public List<User> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<User> members) {
+		this.members = members;
 	}
 
 }

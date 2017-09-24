@@ -54,6 +54,16 @@ public class TeamRepository {
 		return jdbcTemplate.queryForObject(sql, new TeamRowMapper(), id);
 	}
 
+	public int addMember(long teamId, long userId) {
+		String sql = "insert into team_member (team_id, user_id) values (?,?)";
+		return jdbcTemplate.update(sql, teamId, userId);
+	}
+
+	public List<User> members(long teamId) {
+		String sql = "select u.id, u.email, u.active, u.name, u.last_name from user u join team_member tm on u.id = tm.user_id where tm.team_id = ?";
+		return jdbcTemplate.query(sql, new UserRowMapper(), teamId);
+	}
+
 	private class TeamRowMapper implements RowMapper<Team> {
 		@Override
 		public Team mapRow(ResultSet rs, int row) throws SQLException {

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.damm.ideaforge.pojo.Team;
+import org.damm.ideaforge.pojo.TeamMember;
 import org.damm.ideaforge.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,6 +51,13 @@ public class TeamController {
 		return editResponse(updatedTeam);
 	}
 
+	@RequestMapping(value = "/addmember", method = RequestMethod.POST)
+	public ModelAndView addmember(@Valid TeamMember teamMember, BindingResult bindingResult) {
+		teamService.addMember(teamMember.getTeamId(), teamMember.getEmail());
+		Team team = teamService.find(teamMember.getTeamId());
+		return editResponse(team);
+	}
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView loadForEdit(@PathVariable("id") Long id) {
 		Team team = teamService.find(id);
@@ -57,8 +65,12 @@ public class TeamController {
 	}
 
 	private ModelAndView editResponse(Team team) {
+		TeamMember teamMember = new TeamMember();
+		teamMember.setTeamId(team.getId());
+
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("team", team);
+		modelAndView.addObject("member", teamMember);
 		modelAndView.setViewName("team/edit");
 		return modelAndView;
 	}

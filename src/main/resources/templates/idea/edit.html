@@ -1,60 +1,97 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/layout :: head"></head>
 
 <body>
 
 	<nav th:replace="fragments/layout :: top-nav"></nav>
-	
+
 	<div class="container">
-	<div class="row">
+		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
-				<form autocomplete="off" action="#" th:action="@{/idea/edit}" th:object="${idea}" method="post" class="form-horizontal" role="form">
-					
+				<form autocomplete="off" action="#" th:action="@{/idea/edit}"
+					th:object="${idea}" method="post" class="form-horizontal"
+					role="form">
+
 					<h2>Edit Idea</h2>
-					
+
 					<input type="hidden" th:field="*{id}" class="form-control" />
-					
+
 					<div class="form-group">
 						<div class="col-sm-9">
-						<label th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
-								class="validation-message"></label>
-						<input type="text" th:field="*{title}" placeholder="Title"
-								class="form-control" /> 
+							<label th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+								class="validation-message"></label> <input type="text"
+								th:field="*{title}" placeholder="Title" class="form-control" />
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-sm-9">
-						<label	th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
-								class="validation-message"></label>
-							<textarea rows="10" cols="70" type="text" th:field="*{description}"
-								placeholder="Description" class="form-control"></textarea>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<div class="col-sm-9">
-						<label>Created By</label>
-						<span th:text="${idea.createdBy.email}"></span> 
+							<label th:if="${#fields.hasErrors('description')}"
+								th:errors="*{description}" class="validation-message"></label>
+							<textarea rows="10" cols="70" type="text"
+								th:field="*{description}" placeholder="Description"
+								class="form-control"></textarea>
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-sm-9">
-							<button type="submit" class="btn btn-primary btn-block">Edit Idea</button>
+							<label>Created By</label> <span th:text="${idea.createdBy.email}"></span>
 						</div>
 					</div>
-					
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							<button type="submit" class="btn btn-primary btn-block">Edit
+								Idea</button>
+						</div>
+					</div>
+
 					<span th:utext="${successMessage}"></span>
-					
+
 				</form>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<h4>Teams</h4>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="list-group">
+					<a th:each="team : ${idea.teams}" th:text="${team.name}"
+						th:href="@{/team/edit/{id}(id=${team.id})}"
+						class="list-group-item list-group-item-action"></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-2">
+			<div class="col-md-6 col-md-offset-3">
+				<form class="form-inline" action="#" th:action="@{/idea/addteam}"
+					th:object="${teamIdea}" method="post">
+
+					<input type="hidden" th:field="*{ideaId}" class="form-control" />
+					<label th:if="${#fields.hasErrors('teamName')}"
+						th:errors="*{teamName}" class="alert alert-danger"></label> <input
+						type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
+						id="teamName" placeholder="Team Name" th:field="*{teamName}"></input>
+					<button type="submit" class="btn btn-success">
+						Add Team <i class="fa fa-plus"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+
 	</div>
 
 	<div th:replace="fragments/layout :: footer"></div>
-	
+
 </body>
 </html>

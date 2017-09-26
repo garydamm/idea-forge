@@ -2,16 +2,15 @@ package org.damm.ideaforge.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.damm.ideaforge.pojo.Team;
 import org.damm.ideaforge.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -54,6 +53,15 @@ public class TeamRepository {
 		return jdbcTemplate.queryForObject(sql, new TeamRowMapper(), id);
 	}
 
+	public Team findByName(String name) {
+		String sql = String.format("%s %s", SELECT_TEAM, "where name = ?");
+		try {
+			return jdbcTemplate.queryForObject(sql, new TeamRowMapper(), name);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+
 	public int addMember(long teamId, long userId) {
 		String sql = "insert into team_member (team_id, user_id) values (?,?)";
 		return jdbcTemplate.update(sql, teamId, userId);
@@ -62,17 +70,6 @@ public class TeamRepository {
 	public List<User> members(long teamId) {
 		String sql = "select u.id, u.email, u.active, u.name, u.last_name from user u join team_member tm on u.id = tm.user_id where tm.team_id = ?";
 		return jdbcTemplate.query(sql, new UserRowMapper(), teamId);
-	}
-
-	private class TeamRowMapper implements RowMapper<Team> {
-		@Override
-		public Team mapRow(ResultSet rs, int row) throws SQLException {
-			Team team = new Team();
-			team.setId(rs.getLong("id"));
-			team.setName(rs.getString("name"));
-			team.setUserId(rs.getLong("user_id"));
-			return team;
-		}
 	}
 
 }

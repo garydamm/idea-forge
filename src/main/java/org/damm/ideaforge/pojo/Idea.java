@@ -1,5 +1,7 @@
 package org.damm.ideaforge.pojo;
 
+import java.util.List;
+
 public class Idea {
 
 	private long id;
@@ -7,6 +9,7 @@ public class Idea {
 	private String description;
 	private long userId;
 	private User createdBy;
+	private List<Team> teams;
 
 	public String getTitle() {
 		return title;
@@ -46,6 +49,14 @@ public class Idea {
 
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public List<Team> getTeams() {
+		return teams;
+	}
+
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
 }

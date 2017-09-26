@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.damm.ideaforge.pojo.Idea;
+import org.damm.ideaforge.pojo.Team;
 import org.damm.ideaforge.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -53,6 +54,16 @@ public class IdeaRepository {
 	public Idea find(Long id) {
 		String sql = String.format("%s %s", SELECT_IDEA, "where id = ?");
 		return jdbcTemplate.queryForObject(sql, new IdeaRowMapper(), id);
+	}
+
+	public int addTeam(long teamId, long ideaId) {
+		String sql = "insert into team_idea (team_id, idea_id) values (?,?)";
+		return jdbcTemplate.update(sql, teamId, ideaId);
+	}
+
+	public List<Team> teams(long ideaId) {
+		String sql = "select t.id, t.name, t.user_id from team t join team_idea ti on t.id = ti.team_id where ti.idea_id = ?";
+		return jdbcTemplate.query(sql, new TeamRowMapper(), ideaId);
 	}
 
 	private class IdeaRowMapper implements RowMapper<Idea> {

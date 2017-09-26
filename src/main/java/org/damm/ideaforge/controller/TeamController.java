@@ -6,10 +6,12 @@ import javax.validation.Valid;
 
 import org.damm.ideaforge.pojo.Team;
 import org.damm.ideaforge.pojo.TeamMember;
+import org.damm.ideaforge.pojo.User;
 import org.damm.ideaforge.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,10 +54,18 @@ public class TeamController {
 	}
 
 	@RequestMapping(value = "/addmember", method = RequestMethod.POST)
-	public ModelAndView addmember(@Valid TeamMember teamMember, BindingResult bindingResult) {
-		teamService.addMember(teamMember.getTeamId(), teamMember.getEmail());
-		Team team = teamService.find(teamMember.getTeamId());
-		return editResponse(team);
+	public ModelAndView addmember(@Valid @ModelAttribute("member") TeamMember member, BindingResult bindingResult) {
+		ModelAndView modelAndView = new ModelAndView();
+		User newMember = teamService.addMember(member.getTeamId(), member.getEmail());
+		if (newMember == null) {
+			bindingResult.rejectValue("email", "invalid.email", "invalid email");
+		}
+		Team team = teamService.find(member.getTeamId());
+		member.setEmail(null);
+		modelAndView.addObject("team", team);
+		modelAndView.addObject("member", member);
+		modelAndView.setViewName("team/edit");
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)

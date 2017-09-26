@@ -62,17 +62,17 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="row mt-2">
 			<div class="col-md-6 col-md-offset-3">
 				<form class="form-inline" action="#" th:action="@{/team/addmember}"
 					th:object="${member}" method="post">
 
 					<input type="hidden" th:field="*{teamId}" class="form-control" />
-
-					<label class="sr-only" for="inlineFormInput">Add Member</label> <input
-						type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="email"
-						placeholder="Member Email" th:field="*{email}"></input>
+					<label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+						class="alert alert-danger">My Label</label>
+					<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
+						id="email" placeholder="Member Email" th:field="*{email}"></input>
 					<button type="submit" class="btn btn-success">
 						Add Member <i class="fa fa-plus"></i>
 					</button>

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.damm.ideaforge.pojo.Event;
+import org.damm.ideaforge.pojo.Team;
 import org.damm.ideaforge.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,6 +53,16 @@ public class EventRepository {
 	public Event find(Long id) {
 		String sql = String.format("%s %s", SELECT_TEAM, "where id = ?");
 		return jdbcTemplate.queryForObject(sql, new EventRowMapper(), id);
+	}
+
+	public int addTeam(long teamId, long eventId) {
+		String sql = "insert into team_event (team_id, event_id) values (?,?)";
+		return jdbcTemplate.update(sql, teamId, eventId);
+	}
+
+	public List<Team> teams(long eventId) {
+		String sql = "select t.id, t.name, t.user_id from team t join team_event te on t.id = te.team_id where te.event_id = ?";
+		return jdbcTemplate.query(sql, new TeamRowMapper(), eventId);
 	}
 
 	private class EventRowMapper implements RowMapper<Event> {

@@ -43,6 +43,40 @@
 				</form>
 			</div>
 		</div>
+		
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<h4>Teams</h4>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="list-group">
+					<a th:each="team : ${event.teams}" th:text="${team.name}"
+						th:href="@{/team/edit/{id}(id=${team.id})}"
+						class="list-group-item list-group-item-action"></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-2">
+			<div class="col-md-6 col-md-offset-3">
+				<form class="form-inline" action="#" th:action="@{/event/addteam}"
+					th:object="${teamEvent}" method="post">
+
+					<input type="hidden" th:field="*{eventId}" class="form-control" />
+					<label th:if="${#fields.hasErrors('teamName')}"
+						th:errors="*{teamName}" class="alert alert-danger"></label> <input
+						type="text" class="form-control mb-2 mr-sm-2 mb-sm-0"
+						id="teamName" placeholder="Team Name" th:field="*{teamName}"></input>
+					<button type="submit" class="btn btn-success">
+						Add Team <i class="fa fa-plus"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+		
 	</div>
 
 	<div th:replace="fragments/layout :: footer"></div>

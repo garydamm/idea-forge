@@ -1,5 +1,7 @@
 package org.damm.ideaforge.pojo;
 
+import java.util.List;
+
 public class Event {
 
 	private long id;
@@ -8,6 +10,7 @@ public class Event {
 	private long start;
 	private long end;
 	private User createdBy;
+	private List<Team> teams;
 
 	public String getName() {
 		return name;
@@ -55,6 +58,14 @@ public class Event {
 
 	public void setEnd(long end) {
 		this.end = end;
+	}
+
+	public List<Team> getTeams() {
+		return teams;
+	}
+
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
 }

@@ -5,10 +5,13 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.damm.ideaforge.pojo.Event;
+import org.damm.ideaforge.pojo.Team;
+import org.damm.ideaforge.pojo.TeamEvent;
 import org.damm.ideaforge.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,9 +59,27 @@ public class EventController {
 		return editResponse(event);
 	}
 
+	@RequestMapping(value = "/addteam", method = RequestMethod.POST)
+	public ModelAndView addmember(@Valid @ModelAttribute("teamEvent") TeamEvent teamEvent,
+	        BindingResult bindingResult) {
+		ModelAndView modelAndView = new ModelAndView();
+		Team newTeamEvent = eventService.addTeam(teamEvent.getEventId(), teamEvent.getTeamName());
+		if (newTeamEvent == null) {
+			bindingResult.rejectValue("teamName", "invalid.team.name", "invalid team name");
+		}
+		Event event = eventService.find(teamEvent.getEventId());
+		modelAndView.addObject("teamEvent", teamEvent);
+		modelAndView.addObject("event", event);
+		modelAndView.setViewName("event/edit");
+		return modelAndView;
+	}
+
 	private ModelAndView editResponse(Event event) {
+		TeamEvent teamEvent = new TeamEvent();
+		teamEvent.setEventId(event.getId());
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("event", event);
+		modelAndView.addObject("teamEvent", teamEvent);
 		modelAndView.setViewName("event/edit");
 		return modelAndView;
 	}

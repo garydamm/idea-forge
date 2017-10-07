@@ -7,7 +7,7 @@
 * java 8+
 ## Build
 ```java
-mvn clean install
+./mvnw clean install
 ```
 ## Run
 ```java

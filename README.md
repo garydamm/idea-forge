@@ -1,2 +1,15 @@
 # idea-forge
-The beginning of an idea management project.
+* submit ideas
+* build teams and relate ideas
+* create events and related ideas
+## Prerequisites
+* mysql
+* java 8+
+## Build
+```java
+mvn clean install
+```
+## Run
+```java
+java -jar target/idea-forge-<latest-version>.jar
+```

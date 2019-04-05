@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,8 +14,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+@EnableOAuth2Sso
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -53,31 +54,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	public void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-		http.authorizeRequests()
-			.antMatchers("/login").permitAll()
-			.antMatchers("/registration").permitAll()
-			.antMatchers("/**")
-				.hasAuthority("USER")
-				.anyRequest()
-				.authenticated()
-				.and()
-				.csrf()
-				.disable()
-				.formLogin()
-				.loginPage("/login")
-				.failureUrl("/login?error=true")
-				.defaultSuccessUrl("/")
-				.usernameParameter("email")
-				.passwordParameter("password")
-				.and()
-				.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.logoutSuccessUrl("/")
-				.and()
-				.exceptionHandling()
-				.accessDeniedPage("/access-denied");
+		http.antMatcher("/**")
+			.authorizeRequests()
+			.antMatchers("/", "/login**")
+			.permitAll()
+			.anyRequest()
+			.authenticated();
 		// @formatter:on
 	}
 
@@ -85,5 +69,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
 	}
+
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		// @formatter:off
+//		http.authorizeRequests()
+//			.antMatchers("/login").permitAll()
+//			.antMatchers("/registration").permitAll()
+//			.antMatchers("/**")
+//				.hasAuthority("USER")
+//				.anyRequest()
+//				.authenticated()
+//				.and()
+//				.csrf()
+//				.disable()
+//				.formLogin()
+//				.loginPage("/login")
+//				.failureUrl("/login?error=true")
+//				.defaultSuccessUrl("/")
+//				.usernameParameter("email")
+//				.passwordParameter("password")
+//				.and()
+//				.logout()
+//				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//				.logoutSuccessUrl("/")
+//				.and()
+//				.exceptionHandling()
+//				.accessDeniedPage("/access-denied");
+//		// @formatter:on
+//	}
 
 }

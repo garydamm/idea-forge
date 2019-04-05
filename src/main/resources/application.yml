@@ -1,0 +1,30 @@
+debug: true
+
+security:
+  oauth2:
+    client:
+      clientId: SampleClientId
+      clientSecret: secret
+      accessTokenUri: http://localhost:8081/auth/oauth/token
+      userAuthorizationUri: http://localhost:8081/auth/oauth/authorize
+    resource:
+      userInfoUri: http://localhost:8081/auth/user/me
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/idea_manager?useSSL=false
+    username: root
+    password: root
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  queries:
+    users-query: select email, password, active from user where email=?
+    roles-query: select u.email, r.role from user u inner join user_role ur on(u.id=ur.user_id) inner join role r on(ur.role_id=r.id) where u.email=?

@@ -43,7 +43,10 @@ public class UserRepository {
 
 	public void insert(User user) {
 		String sql = "insert into user (email, name, last_name, password, active) values (?,?,?,?,1); ";
-		String password = bCryptPasswordEncoder.encode(user.getPassword());
+		String password = null;
+		if (user.getPassword() != null) {
+			password = bCryptPasswordEncoder.encode(user.getPassword());
+		}
 		jdbcTemplate.update(sql, user.getEmail(), user.getName(), user.getLastName(), password);
 		User newUser = findUserByEmail(user.getEmail());
 		Role role = findRoleByName("USER");
